@@ -4,19 +4,23 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private FetchCatsImage mFetchCatsImage;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView textView = (TextView) findViewById(R.id.main_text);
-        GetCatsUrl getCatsUrl = new GetCatsUrl(textView);
-        getCatsUrl.execute();
-
+        imageView = (ImageView) findViewById(R.id.image_view);
+        mFetchCatsImage = new FetchCatsImage(this);
+        mFetchCatsImage.execute();
     }
 
     @Override
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Picasso.with(this).load(mFetchCatsImage.getUrlString()).into(imageView);
             return true;
         }
 
