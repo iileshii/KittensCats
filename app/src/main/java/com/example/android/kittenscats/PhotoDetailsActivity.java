@@ -18,10 +18,10 @@ public class PhotoDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_details);
 
         Intent intent = getIntent();
-        String imageUrl = (String) intent.getSerializableExtra("PHOTO_TRANSFER");
+        Photo currentImage = (Photo) intent.getSerializableExtra("PHOTO_TRANSFER");
 
         ImageView imageView = (ImageView) findViewById(R.id.picture_detail);
-        Picasso.with(this).load(imageUrl).into(imageView);
+        Picasso.with(this).load(currentImage.toUrlStringBySize("z")).into(imageView);
     }
 
     @Override

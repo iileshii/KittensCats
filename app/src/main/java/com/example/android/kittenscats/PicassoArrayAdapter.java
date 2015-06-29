@@ -15,10 +15,10 @@ import java.util.List;
  * Created by Leshii on 6/26/2015.
  * Picasso Array Adapter to show images by String Array
  */
-public class PicassoArrayAdapter extends ArrayAdapter<String> {
+public class PicassoArrayAdapter extends ArrayAdapter<Photo> {
 
 
-    public PicassoArrayAdapter(Context context, int resource, List<String> objects) {
+    public PicassoArrayAdapter(Context context, int resource, List<Photo> objects) {
         super(context, resource, objects);
     }
 
@@ -35,7 +35,7 @@ public class PicassoArrayAdapter extends ArrayAdapter<String> {
         }
 
         // Get the image URL for the current position.
-        String url = getItem(position);
+        String url = getItem(position).toUrlStringBySize("n");
 
         // Trigger the download of the URL asynchronously into the image view.
         Picasso.with(getContext())

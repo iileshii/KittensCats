@@ -8,12 +8,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 
 public class MainActivity extends AppCompatActivity {
 
-    private FetchCatsImage mFetchCatsImage;
+    private FetchJsonPhotoList mFetchJsonPhotoList;
     private ImageView imageView;
     private ImageView imageView2;
     private ListView mListView;
@@ -28,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.list_view);
 
-        mFetchCatsImage = new FetchCatsImage(this, mListView);
-        mFetchCatsImage.execute();
+        mFetchJsonPhotoList = new FetchJsonPhotoList(this, mListView);
+        mFetchJsonPhotoList.execute();
 
 
     }
@@ -50,13 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Picasso.with(this).load(mFetchCatsImage.getUrlString(0)).into(imageView);
-            Picasso.with(this).load(mFetchCatsImage.getUrlString(1)).into(imageView2);
+//            Picasso.with(this).load(mFetchCatsImage.getUrlString(0)).into(imageView);
+//            Picasso.with(this).load(mFetchCatsImage.getUrlString(1)).into(imageView2);
+            Toast.makeText(this, "Hi! How are you? Settings", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         if (id == R.id.action_fill) {
-            Toast.makeText(this, "Hi! How are you?", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Hi! How are you? Fill", Toast.LENGTH_SHORT).show();
             return true;
         }
 

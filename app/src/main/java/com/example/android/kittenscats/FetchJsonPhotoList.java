@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -20,34 +21,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Leshii on 6/24/2015.
- * This class gets json to show
+ * Created by Leshii on 6/29/2015.
+ * Fetch JSON Photo list and parse it
  */
-public class FetchCatsImage extends AsyncTask<String, Void, String> {
+public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
+
+    private String mUrl = "https://api.flickr.com/services/rest/" +
+            "?method=flickr.photos.search&api_key=6f91ef5959d961087f0a6d1b105226df" +
+            "&tags=cats,cat,kitten,kittens&tag_mode=ANY&per_page=20&format=json";
 
     private Context mContext;
     private ListView mListView;
-    private List<String> imagesUrlArray = new ArrayList<>();
+    private List<Photo> mPhotoList = new ArrayList<>();
 
-    private String stringUrl = "https://api.flickr.com/services/feeds/photos_public.gne" +
-            "?tags=cats,cat,kitten,kittens&tagmode=ANY&format=json";
-
-    public FetchCatsImage(Context context, ListView listView) {
+    public FetchJsonPhotoList(Context context, ListView listView) {
         mContext = context;
         mListView = listView;
     }
 
-    public String getUrlString(int index) {
-        if (imagesUrlArray.size() < index + 1) return null;
-        else
-            return imagesUrlArray.get(index);
-    }
-
     @Override
-    protected String doInBackground(String... params) {
+    protected Void doInBackground(Void... voids) {
 
         try {
-            URL url = new URL(stringUrl);
+
+            java.net.URL url = new URL(mUrl);
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -68,16 +65,15 @@ public class FetchCatsImage extends AsyncTask<String, Void, String> {
                 return null;
             }
 
-            getDataFromJSON(stringBuilder.toString().replace("jsonFlickrFeed(", ""));
+
+            getDataFromJSON(stringBuilder.toString().replace("jsonFlickrApi(", ""));
 
             reader.close();
             inputStream.close();
             urlConnection.disconnect();
-
-        } catch (java.io.IOException | JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }
@@ -86,35 +82,40 @@ public class FetchCatsImage extends AsyncTask<String, Void, String> {
 
         JSONObject jsonObject = new JSONObject(stringJSON);
 
-        JSONArray jsonArray = jsonObject.getJSONArray("items");
+        JSONArray jsonArray = jsonObject.getJSONObject("photos").getJSONArray("photo");
 
         for (int i = 0; i < jsonArray.length(); i++) {
 
             JSONObject jsonLine = (JSONObject) jsonArray.get(i);
-            imagesUrlArray.add(jsonLine
-                    .getJSONObject("media").getString("m").replace("_m.jpg", ".jpg"));
+
+            String currentId = jsonLine.getString("id");
+            String currentOwner = jsonLine.getString("owner");
+            String currentSecret = jsonLine.getString("secret");
+            String currentServer = jsonLine.getString("server");
+            String currentFarm = jsonLine.getString("farm");
+            String currentTitle = jsonLine.getString("title");
+
+            Photo currentPhoto = new Photo(currentId, currentOwner, currentSecret,
+                    currentServer, currentFarm, currentTitle);
+
+            mPhotoList.add(currentPhoto);
         }
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
         final PicassoArrayAdapter picassoArrayAdapter =
-                new PicassoArrayAdapter(mContext, R.id.list_view, imagesUrlArray);
+                new PicassoArrayAdapter(mContext, R.id.list_view, mPhotoList);
 
         mListView.setAdapter(picassoArrayAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(mContext, PhotoDetailsActivity.class);
-                intent.putExtra("PHOTO_TRANSFER", imagesUrlArray.get(i));
+                intent.putExtra("PHOTO_TRANSFER", mPhotoList.get(i));
                 mContext.startActivity(intent);
             }
         });
-
-    }
-
-    public List<String> getImagesUrlArray() {
-        return imagesUrlArray;
     }
 }
