@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">#00796B</item>
         <item name="android:navigationBarColor">#00796B</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
-
     </style>
 
 

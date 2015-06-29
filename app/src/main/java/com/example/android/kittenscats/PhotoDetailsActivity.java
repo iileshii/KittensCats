@@ -1,43 +1,33 @@
 package com.example.android.kittenscats;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 
-public class MainActivity extends AppCompatActivity {
-
-    private FetchCatsImage mFetchCatsImage;
-    private ImageView imageView;
-    private ImageView imageView2;
-    private ListView mListView;
+public class PhotoDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_photo_details);
 
-        imageView = (ImageView) findViewById(R.id.image_view);
-        imageView2 = (ImageView) findViewById(R.id.image_view2);
+        Intent intent = getIntent();
+        String imageUrl = (String) intent.getSerializableExtra("PHOTO_TRANSFER");
 
-        mListView = (ListView) findViewById(R.id.list_view);
-
-        mFetchCatsImage = new FetchCatsImage(this, mListView);
-        mFetchCatsImage.execute();
-
-
+        ImageView imageView = (ImageView) findViewById(R.id.picture_detail);
+        Picasso.with(this).load(imageUrl).into(imageView);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_photo_details, menu);
         return true;
     }
 
@@ -50,13 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Picasso.with(this).load(mFetchCatsImage.getUrlString(0)).into(imageView);
-            Picasso.with(this).load(mFetchCatsImage.getUrlString(1)).into(imageView2);
-            return true;
-        }
-
-        if (id == R.id.action_fill) {
-            Toast.makeText(this, "Hi! How are you?", Toast.LENGTH_SHORT).show();
             return true;
         }
 
