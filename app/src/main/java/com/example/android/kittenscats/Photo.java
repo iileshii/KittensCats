@@ -93,7 +93,7 @@ public class Photo implements Serializable {
     }
 
     public String toShortUrl() {
-        return "https://flic.kr/p/" + Utils.Base58.numberToAlpha(Long.getLong(id));
+        return "https://flic.kr/p/" + Utils.Base58.numberToAlpha(Long.parseLong(id));
     }
 
 }
