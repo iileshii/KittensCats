@@ -1,10 +1,59 @@
 package com.example.android.kittenscats;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * Created by Leshii on 6/29/2015.
- * Utils to use
+ * Useful utils
  */
 public class Utils {
+
+    public static String getJSONStringByURL(String stringURL) {
+        String jsonLine = null;
+        try {
+            URL url = new URL(stringURL);
+
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            StringBuilder stringBuilder = new StringBuilder();
+            String streamLine;
+
+            while ((streamLine = reader.readLine()) != null) {
+                stringBuilder.append(streamLine).append("\n");
+            }
+
+            jsonLine = stringBuilder.toString();
+
+            reader.close();
+            inputStream.close();
+            urlConnection.disconnect();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (jsonLine != null) {
+            jsonLine = cleanFlickrApiJson(jsonLine);
+        }
+
+        return jsonLine;
+    }
+
+    private static String cleanFlickrApiJson(String jsonLine) {
+        String result = jsonLine.replace("jsonFlickrApi(", ""); // Delete starts symbols
+        return result.substring(0, result.length() - 1); //Delete end symbol ")"
+    }
 
     // this class works with Base58 code for short URLs
     public static class Base58 {
