@@ -11,15 +11,22 @@ public class Photo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
-    private String owner;
+    private String ownerId;
     private String secret;
     private String server;
     private String farm;
     private String title;
 
-    public Photo(String id, String owner, String secret, String server, String farm, String title) {
+    private String ownerRealName;
+
+    public Photo(String id,
+                 String ownerId,
+                 String secret,
+                 String server,
+                 String farm,
+                 String title) {
         this.id = id;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.secret = secret;
         this.server = server;
         this.farm = farm;
@@ -30,12 +37,20 @@ public class Photo implements Serializable {
         return title;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getOwnerRealName() {
+        return ownerRealName;
+    }
+
+    public void setOwnerRealName(String ownerRealName) {
+        this.ownerRealName = ownerRealName;
     }
 
     public String toUrlString() {
@@ -78,19 +93,19 @@ public class Photo implements Serializable {
 //    }
 
     public String toUrlUserProfile() {
-        return "https://www.flickr.com/people/" + owner + "/";
+        return "https://www.flickr.com/people/" + ownerId + "/";
     }
 
     public String toUrlUserPhotostream() {
-        return "https://www.flickr.com/photos/" + owner + "/";
+        return "https://www.flickr.com/photos/" + ownerId + "/";
     }
 
     public String toUrlPhotoPage() {
-        return "https://www.flickr.com/photos/" + owner + "/" + id;
+        return "https://www.flickr.com/photos/" + ownerId + "/" + id;
     }
 
     public String toUrlUserPhotosets() {
-        return "https://www.flickr.com/photos/" + owner + "/sets/";
+        return "https://www.flickr.com/photos/" + ownerId + "/sets/";
     }
 
     public String toShortUrl() {

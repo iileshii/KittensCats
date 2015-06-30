@@ -22,7 +22,7 @@ public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
 
     private String mUrlPhotoSearch = "https://api.flickr.com/services/rest/" +
             "?method=flickr.photos.search&api_key=6f91ef5959d961087f0a6d1b105226df" +
-            "&tags=cats,cat,kitten,kittens&tag_mode=ANY&per_page=20&format=json";
+            "&tags=cats,cat,kitten,kittens&tag_mode=ANY&per_page=5&format=json";
 
     private String mUrlUserInfo = "https://api.flickr.com/services/rest/" +
             "?method=flickr.people.getInfo&api_key=6f91ef5959d961087f0a6d1b105226df" +
@@ -42,6 +42,7 @@ public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
 
         try {
             getPhotoDataFromJSON(Utils.getJSONStringByURL(mUrlPhotoSearch));
+            getOwnerDataFromJSON();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -70,6 +71,22 @@ public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
                     currentServer, currentFarm, currentTitle);
 
             mPhotoList.add(currentPhoto);
+        }
+    }
+
+    private void getOwnerDataFromJSON() throws JSONException {
+
+        for (Photo photo : mPhotoList) {
+
+            String userInfoUrl = mUrlUserInfo + photo.getOwnerId();
+            String stringJSON = Utils.getJSONStringByURL(userInfoUrl);
+
+            JSONObject jsonObject = new JSONObject(stringJSON);
+
+            photo.setOwnerRealName(jsonObject
+                    .getJSONObject("person")
+                    .getJSONObject("realname")
+                    .getString("_content"));
         }
     }
 
