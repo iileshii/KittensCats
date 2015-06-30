@@ -67,14 +67,15 @@ public class Photo implements Serializable {
                 "_" + size + ".jpg";
     }
 
-    public String toUrlStringOriginal(String originalFormat) {
-        return "https://farm" + farm +
-                ".staticflickr.com/" + server +
-                "/" + id +
-                "_" + "o-" + secret +
-                "_o." + originalFormat;
-
-    }
+    // It's wrong. Original picture has own secret code
+//    public String toUrlStringOriginal(String originalFormat) {
+//        return "https://farm" + farm +
+//                ".staticflickr.com/" + server +
+//                "/" + id +
+//                "_" + "o-" + secret +
+//                "_o." + originalFormat;
+//
+//    }
 
     public String toUrlUserProfile() {
         return "https://www.flickr.com/people/" + owner + "/";
@@ -93,7 +94,7 @@ public class Photo implements Serializable {
     }
 
     public String toShortUrl() {
-        return "https://flic.kr/p/" + Utils.Base58.numberToAlpha(Long.parseLong(id));
+        return "https://flic.kr/p/" + Utils.Base58.encode(Long.parseLong(id));
     }
 
 }

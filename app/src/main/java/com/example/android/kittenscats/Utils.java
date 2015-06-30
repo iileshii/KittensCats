@@ -9,44 +9,39 @@ public class Utils {
     // this class works with Base58 code for short URLs
     public static class Base58 {
 
-        private static final char[] BASE58_CHARS =
-                "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
+        private static final String BASE58_ALPHABET =
+                "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 
-        public static String numberToAlpha(long number) {
-            char[] buffer = new char[20];
-            int index = 0;
-            do {
-                buffer[index++] = BASE58_CHARS[(int) (number % BASE58_CHARS.length)];
-                number = number / BASE58_CHARS.length;
-            } while (number > 0);
-            return new String(buffer, 0, index);
+        public static String encode(long number) {
+            String result = "";
+            int baseLength = BASE58_ALPHABET.length();
+
+            while (number >= baseLength) {
+                double div = number / baseLength;
+                int mod = (int) (number - (baseLength * (long) div));
+                result = BASE58_ALPHABET.substring(mod, mod + 1) + result;
+                number = (long) div;
+            }
+
+            if (number != 0) result =
+                    BASE58_ALPHABET.substring((int) number, (int) number + 1) + result;
+            return result;
+
         }
 
-        public static long alphaToNumber(String text) {
-            char[] chars = text.toCharArray();
+        public static long decode(String text) {
+            String line = text;
             long result = 0;
-            long multiplier = 1;
-            for (char c : chars) {
-                int digit;
-                if (c >= '1' && c <= '9') {
-                    digit = c - '1';
-                } else if (c >= 'A' && c < 'I') {
-                    digit = (c - 'A') + 9;
-                } else if (c > 'I' && c < 'O') {
-                    digit = (c - 'J') + 17;
-                } else if (c > 'O' && c <= 'Z') {
-                    digit = (c - 'P') + 22;
-                } else if (c >= 'a' && c < 'l') {
-                    digit = (c - 'a') + 33;
-                } else if (c > 'l' && c <= 'z') {
-                    digit = (c - 'l') + 43;
-                } else {
-                    throw new IllegalArgumentException("Illegal character found: '" + c + "'");
-                }
+            long multi = 1;
 
-                result += digit * multiplier;
-                multiplier = multiplier * BASE58_CHARS.length;
+            while (line.length() > 0) {
+                int length = line.length();
+                String digit = line.substring(length - 1, length);
+                result += multi * BASE58_ALPHABET.indexOf(digit);
+                multi = multi * BASE58_ALPHABET.length();
+                line = line.substring(0, length - 1);
             }
+
             return result;
         }
     }
