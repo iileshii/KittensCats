@@ -83,10 +83,16 @@ public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
 
             JSONObject jsonObject = new JSONObject(stringJSON);
 
-            photo.setOwnerRealName(jsonObject
-                    .getJSONObject("person")
-                    .getJSONObject("realname")
-                    .getString("_content"));
+            JSONObject personNames = jsonObject.getJSONObject("person");
+            String realName = null;
+            String userName;
+
+            if (!personNames.isNull("realname")) {
+                realName = personNames.getJSONObject("realname").getString("_content");
+            }
+            userName = personNames.getJSONObject("username").getString("_content");
+
+            photo.setOwnerNames(realName, userName);
         }
     }
 

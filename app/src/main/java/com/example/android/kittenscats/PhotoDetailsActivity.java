@@ -32,11 +32,7 @@ public class PhotoDetailsActivity extends AppCompatActivity {
         Picasso.with(this).load(currentImage.toUrlStringBySize("z")).into(imageView);
 
         TextView textOwner = (TextView) findViewById(R.id.picture_owner);
-        if (currentImage.getOwnerRealName() != null) {
-            textOwner.setText(currentImage.getOwnerRealName());
-        } else {
-            textOwner.setText(currentImage.getOwnerId());
-        }
+        textOwner.setText(currentImage.getExistName());
 
         TextView textTitle = (TextView) findViewById(R.id.picture_title);
         textTitle.setText(currentImage.getTitle());
@@ -61,19 +57,13 @@ public class PhotoDetailsActivity extends AppCompatActivity {
     }
 
     private Intent createShareIntent() {
-        StringBuilder textExtra = new StringBuilder();
-        textExtra.append("Photo: ").append(currentImage.toShortUrl());
-        textExtra.append("\n").append("by: ");
-        if (currentImage.getOwnerRealName() != null) {
-            textExtra.append(currentImage.getOwnerRealName());
-        } else {
-            textExtra.append(currentImage.getOwnerId());
-        }
-        textExtra.append("\n").append("Kittens & Cats app");
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, textExtra.toString());
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+                "Photo: " + currentImage.toShortUrl() +
+                        "\n" + "by: " + currentImage.getExistName() +
+                        "\n" + "Kittens & Cats app");
         Intent.createChooser(shareIntent, "Share catlink to..");
         return shareIntent;
     }

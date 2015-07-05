@@ -21,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView = (ImageView) findViewById(R.id.image_view);
-        imageView2 = (ImageView) findViewById(R.id.image_view2);
-
         mListView = (ListView) findViewById(R.id.list_view);
 
         mFetchJsonPhotoList = new FetchJsonPhotoList(this, mListView);

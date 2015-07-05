@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:scaleType="fitStart"
+        android:scaleType="fitCenter"
         android:src="@drawable/placeholder"/>
 
     <TextView
@@ -22,14 +22,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/picture_owner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="start"
         android:layout_marginTop="16dp"
-        android:textSize="12sp"/>
+        android:textSize="16sp"/>
 
 </LinearLayout>

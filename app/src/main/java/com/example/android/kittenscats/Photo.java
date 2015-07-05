@@ -18,6 +18,7 @@ public class Photo implements Serializable {
     private String title;
 
     private String ownerRealName;
+    private String ownerUserName;
 
     public Photo(String id,
                  String ownerId,
@@ -49,8 +50,23 @@ public class Photo implements Serializable {
         return ownerRealName;
     }
 
-    public void setOwnerRealName(String ownerRealName) {
+    public String getOwnerUserName() {
+        return ownerUserName;
+    }
+
+    public String getExistName() {
+        if (ownerRealName != null) {
+            return ownerRealName;
+        } else if (ownerUserName != null) {
+            return ownerUserName;
+        } else {
+            return ownerId;
+        }
+    }
+
+    public void setOwnerNames(String ownerRealName, String ownerUserName) {
         this.ownerRealName = ownerRealName;
+        this.ownerUserName = ownerUserName;
     }
 
     public String toUrlString() {
