@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kittens &amp; Cats</string>
+    <string name="check_connection">Проверьте подключение к Интернет</string>
+    <string name="press_it">Нажми сюда!</string>
+    <string name="shareButton">Поделиться</string>
+    <string name="title_activity_photo_details">Выбранное фото</string>
+</resources>
