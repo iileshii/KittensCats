@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 
-
 public class PhotoDetailsActivity extends AppCompatActivity {
 
     private Photo currentImage;

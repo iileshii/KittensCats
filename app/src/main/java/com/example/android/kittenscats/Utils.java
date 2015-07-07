@@ -1,5 +1,7 @@
 package com.example.android.kittenscats;
 
+import android.net.Uri;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +14,24 @@ import java.net.URL;
  * Useful utils
  */
 public class Utils {
+
+    public static String getUrlPhotoSearch(int itemsPerPage, int pageNumber) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("api.flickr.com")
+                .appendPath("services")
+                .appendPath("rest")
+                .appendQueryParameter("method", "flickr.photos.search")
+                .appendQueryParameter("api_key", "6f91ef5959d961087f0a6d1b105226df")
+                .appendQueryParameter("tags", "cats,cat,kitten,kittens")
+                .appendQueryParameter("tag_mode", "ANY")
+                .appendQueryParameter("per_page", String.valueOf(itemsPerPage))
+                .appendQueryParameter("page", String.valueOf(pageNumber))
+                .appendQueryParameter("format", "json");
+
+        Uri result = builder.build();
+        return result.toString();
+    }
 
     public static String getJSONStringByURL(String stringURL) {
         String jsonLine = null;

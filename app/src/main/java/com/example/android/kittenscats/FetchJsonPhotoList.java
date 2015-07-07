@@ -1,17 +1,12 @@
 package com.example.android.kittenscats;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,29 +15,46 @@ import java.util.List;
  */
 public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
 
+    private static final int ITEMS_PER_PAGE = 10;
+    private static int sPageNumber = 1;
     private String mUrlPhotoSearch = "https://api.flickr.com/services/rest/" +
             "?method=flickr.photos.search&api_key=6f91ef5959d961087f0a6d1b105226df" +
-            "&tags=cats,cat,kitten,kittens&tag_mode=ANY&per_page=5&format=json";
-
+            "&tags=cats,cat,kitten,kittens&tag_mode=ANY&per_page=20&format=json";
     private String mUrlUserInfo = "https://api.flickr.com/services/rest/" +
             "?method=flickr.people.getInfo&api_key=6f91ef5959d961087f0a6d1b105226df" +
             "&format=json&user_id=";
 
     private Context mContext;
-    private ListView mListView;
-    private List<Photo> mPhotoList = new ArrayList<>();
+    private List<Photo> mPhotoList;
+    private PicassoRecyclerAdapter mPicassoRecyclerAdapter;
 
-    public FetchJsonPhotoList(Context context, ListView listView) {
+
+    public FetchJsonPhotoList(Context context,
+                              List<Photo> photoList,
+                              PicassoRecyclerAdapter picassoRecyclerAdapter) {
         mContext = context;
-        mListView = listView;
+        mPhotoList = photoList;
+        mPicassoRecyclerAdapter = picassoRecyclerAdapter;
+    }
+
+    public static void addPageNumber() {
+        sPageNumber++;
+    }
+
+    public static int getPageNumber() {
+        return sPageNumber;
+    }
+
+    public static int getItemsPerPage() {
+        return ITEMS_PER_PAGE;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
 
         try {
-            getPhotoDataFromJSON(Utils.getJSONStringByURL(mUrlPhotoSearch));
-            getOwnerDataFromJSON();
+            String mUrl = Utils.getUrlPhotoSearch(ITEMS_PER_PAGE, sPageNumber);
+            getPhotoDataFromJSON(Utils.getJSONStringByURL(mUrl));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -69,47 +81,42 @@ public class FetchJsonPhotoList extends AsyncTask<Void, Void, Void> {
 
             Photo currentPhoto = new Photo(currentId, currentOwner, currentSecret,
                     currentServer, currentFarm, currentTitle);
-
+            getOwnerDataFromJSON(currentPhoto);
             mPhotoList.add(currentPhoto);
+            publishProgress();
         }
     }
 
-    private void getOwnerDataFromJSON() throws JSONException {
+    private void getOwnerDataFromJSON(Photo photo) throws JSONException {
 
-        for (Photo photo : mPhotoList) {
+        String userInfoUrl = mUrlUserInfo + photo.getOwnerId();
+        String stringJSON = Utils.getJSONStringByURL(userInfoUrl);
 
-            String userInfoUrl = mUrlUserInfo + photo.getOwnerId();
-            String stringJSON = Utils.getJSONStringByURL(userInfoUrl);
+        JSONObject jsonObject = new JSONObject(stringJSON);
 
-            JSONObject jsonObject = new JSONObject(stringJSON);
+        JSONObject personNames = jsonObject.getJSONObject("person");
+        String realName = null;
+        String userName;
 
-            JSONObject personNames = jsonObject.getJSONObject("person");
-            String realName = null;
-            String userName;
-
-            if (!personNames.isNull("realname")) {
-                realName = personNames.getJSONObject("realname").getString("_content");
-            }
-            userName = personNames.getJSONObject("username").getString("_content");
-
-            photo.setOwnerNames(realName, userName);
+        if (!personNames.isNull("realname")) {
+            realName = personNames.getJSONObject("realname").getString("_content");
         }
+        userName = personNames.getJSONObject("username").getString("_content");
+
+        photo.setOwnerNames(realName, userName);
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
+
+        mPicassoRecyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        final PicassoArrayAdapter picassoArrayAdapter =
-                new PicassoArrayAdapter(mContext, R.id.list_view, mPhotoList);
 
-        mListView.setAdapter(picassoArrayAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(mContext, PhotoDetailsActivity.class);
-                intent.putExtra("PHOTO_TRANSFER", mPhotoList.get(i));
-                mContext.startActivity(intent);
-            }
-        });
+        mPicassoRecyclerAdapter.notifyDataSetChanged();
     }
 }
