@@ -16,13 +16,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/parentPanel"
+        android:minHeight="150dp">
 
         <TextView
             android:id="@+id/picture_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Picture Title"
@@ -32,20 +34,20 @@
 
         <TextView
             android:id="@+id/picture_author"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Picture Author"
             android:textColor="@color/secondary_text_default_material_light"
             android:textSize="16sp"
-            android:layout_below="@+id/picture_title"
-            android:layout_alignRight="@+id/textView"
-            android:layout_alignEnd="@+id/textView" />
+            android:layout_below="@+id/picture_title" />
+/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TEST OBJECT"
+            android:layout_below="@id/picture_author"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
