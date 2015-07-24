@@ -14,7 +14,7 @@
         android:src="@drawable/placeholder"
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
@@ -35,10 +35,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="16dp"
             android:text="Picture Author"
             android:textColor="@color/secondary_text_default_material_light"
-            android:textSize="16sp"/>
-    </LinearLayout>
+            android:textSize="16sp"
+            android:layout_below="@+id/picture_title"
+            android:layout_alignRight="@+id/textView"
+            android:layout_alignEnd="@+id/textView" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TEST OBJECT"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/textView" />
+    </RelativeLayout>
 </LinearLayout>
